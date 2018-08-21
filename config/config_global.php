@@ -44,7 +44,7 @@ $_config['download']['xsendfile']['dir'] = '/down/';
 
 // --------------------------  CONFIG OUTPUT  --------------------------- //
 $_config['output']['charset'] = 'utf-8';
-$_config['output']['forceheader'] = 1;
+$_config['output']['forceheader'] = 1;          // discuz_application.php  346行，设置html页面的编码模式
 $_config['output']['gzip'] = '0';       // false
 $_config['output']['tplrefresh'] = 1;
 $_config['output']['language'] = 'zh_cn';
@@ -60,7 +60,7 @@ $_config['cookie']['cookiepath'] = '/';
 // -------------------------  CONFIG SECURITY  -------------------------- //
 $_config['security']['authkey'] = '44e3bd56834448da9171539c6a25b526CWGatSIZkij3tM6dYJ';         // discuz_application.php 295行  算法：md5(['cookie']['cookiepre'] . ['db']['1']['dbname'])
 $_config['security']['urlxssdefend'] = 1;
-$_config['security']['attackevasive'] = '0';
+$_config['security']['attackevasive'] = '0';            // 抵御CC攻击   在discuz_application.php   329行
 $_config['security']['querysafe']['status'] = 1;
 $_config['security']['querysafe']['dfunction']['0'] = 'load_file';
 $_config['security']['querysafe']['dfunction']['1'] = 'hex';

@@ -10,7 +10,7 @@
 error_reporting(E_ALL);         // 规定不同的错误级别报告，E_ALL：报告所有的错误级别
 
 define('IN_DISCUZ', true);
-define('DISCUZ_ROOT', substr(dirname(__FILE__), 0, -12));
+define('DISCUZ_ROOT', substr(dirname(__FILE__), 0, -12));           // 退到根目录
 define('DISCUZ_CORE_DEBUG', false);
 define('DISCUZ_TABLE_EXTENDABLE', false);
 
@@ -64,14 +64,14 @@ class core
 	}
 
 	protected static function _make_obj($name, $type, $extendable = false, $p = array()) {
-		$pluginid = null;   //__autoload
+		$pluginid = null;   // __autoload
 		if($name[0] === '#') {
 			list(, $pluginid, $name) = explode('#', $name);
 		}
 		$cname = $type.'_'.$name;
-		if(!isset(self::$_tables[$cname])) {
-			if(!class_exists($cname, false)) {
-				self::import(($pluginid ? 'plugin/'.$pluginid : 'class').'/'.$type.'/'.$name);
+		if(!isset(self::$_tables[$cname])) {        // 判断该表是否设置了
+			if(!class_exists($cname, false)) {              // 检查类是否已定义,第二个参数是：是否默认调用 __autoload。
+				self::import(($pluginid ? 'plugin/'.$pluginid : 'class').'/'.$type.'/'.$name);      // 未定义的话进入这里
 			}
 			if($extendable) {
 				self::$_tables[$cname] = new discuz_container();
@@ -101,7 +101,7 @@ class core
     // 自动导入 php 类模块
 	public static function import($name, $folder = '', $force = true) {
 		$key = $folder.$name;
-		if(!isset(self::$_imports[$key])) {
+		if(!isset(self::$_imports[$key])) {         // 判断是否原先已经调用过了..
 			$path = DISCUZ_ROOT.'/source/'.$folder;
 			if(strpos($name, '/') !== false) {
 				$pre = basename(dirname($name));

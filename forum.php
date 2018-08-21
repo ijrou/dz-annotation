@@ -39,9 +39,9 @@ $modcachelist = array(
 	'topicadmin'	=> array('usergroups'),
 );
 
-$mod = !in_array(C::app()->var['mod'], $modarray) ? 'index' : C::app()->var['mod'];
+$mod = !in_array(C::app()->var['mod'], $modarray) ? 'index' : C::app()->var['mod'];         // 提取当前模块,也就是get请求的mod的参数   discuz_application.php   269行
 
-define('CURMODULE', $mod);
+define('CURMODULE', $mod);          // 设置当前模块
 $cachelist = array();
 if(isset($modcachelist[CURMODULE])) {
 	$cachelist = $modcachelist[CURMODULE];
@@ -54,7 +54,7 @@ if(C::app()->var['mod'] == 'group') {
 }
 
 C::app()->cachelist = $cachelist;
-C::app()->init();
+C::app()->init();               // 重要
 
 loadforum();
 

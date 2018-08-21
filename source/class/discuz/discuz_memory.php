@@ -32,7 +32,7 @@ class discuz_memory extends discuz_base
 
 		foreach($this->config as $cache => $config) {
 			$available = is_array($config) ? !empty($config['server']) : !empty($config);
-			if($available && !is_object($this->memory)) {
+			if($available && !is_object($this->memory)) {           // 载入 redis 等其他之类的内存管理的中间件
 				$class_name = 'memory_driver_'.$cache;
 				$this->memory = new $class_name();
 				$this->memory->init($config);

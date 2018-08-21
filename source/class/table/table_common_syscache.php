@@ -21,9 +21,9 @@ class table_common_syscache extends discuz_table
 		$this->_pk    = 'cname';
 		$this->_pre_cache_key = '';
 		$this->_isfilecache = getglobal('config/cache/type') == 'file';
-		$this->_allowmem = memory('check');
+		$this->_allowmem = memory('check');     // 加载内存管理数据的中间件
 
-		parent::__construct();
+		parent::__construct();          // 调用父类的构造函数
 	}
 
 	public function fetch($cachename) {
@@ -60,7 +60,7 @@ class table_common_syscache extends discuz_table
 			unset($lostcaches);
 		}
 
-		$query = DB::query('SELECT * FROM '.DB::table($this->_table).' WHERE '.DB::field('cname', $cachenames));
+		$query = DB::query('SELECT * FROM '.DB::table($this->_table).' WHERE '.DB::field('cname', $cachenames));        // 查询数据库  返回列表形式
 		while($syscache = DB::fetch($query)) {
 			$data[$syscache['cname']] = $syscache['ctype'] ? unserialize($syscache['data']) : $syscache['data'];
 			$this->_allowmem && (memory('set', $syscache['cname'], $data[$syscache['cname']]));

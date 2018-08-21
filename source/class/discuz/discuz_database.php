@@ -10,7 +10,7 @@
 if(!defined('IN_DISCUZ')) {
 	exit('Access Denied');
 }
-class discuz_database {
+class discuz_database {         // 被discuz_application.php调用init   409行
 
 	public static $db;
 
@@ -18,9 +18,9 @@ class discuz_database {
 
 	public static function init($driver, $config) {
 		self::$driver = $driver;
-		self::$db = new $driver;
-		self::$db->set_config($config);
-		self::$db->connect();
+		self::$db = new $driver;            // 触发 discuz_core.php 自动导入包函数
+		self::$db->set_config($config);         // 设置要连接数据库的链接配置
+		self::$db->connect();           // 创建数据库连接对象db
 	}
 
 	public static function object() {

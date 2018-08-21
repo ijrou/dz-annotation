@@ -26,10 +26,10 @@ function system_error($message, $show = true, $save = true, $halt = true) {
 function updatesession() {
 	return C::app()->session->updatesession();
 }
-
+// 设置或新增超全局变量$_G的key value
 function setglobal($key , $value, $group = null) {
 	global $_G;
-	$key = explode('/', $group === null ? $key : $group.'/'.$key);
+	$key = explode('/', $group === null ? $key : $group.'/'.$key);          //
 	$p = &$_G;
 	foreach ($key as $k) {
 		if(!isset($p[$k]) || !is_array($p[$k])) {
@@ -40,7 +40,7 @@ function setglobal($key , $value, $group = null) {
 	$p = $value;
 	return true;
 }
-
+// 获取配置文件里的信息，注意，这里的配置文件其实已经读取到$G这个全局对象里面了
 function getglobal($key, $group = null) {
 	global $_G;
 	$key = explode('/', $group === null ? $key : $group.'/'.$key);
@@ -120,7 +120,7 @@ function getuserprofile($field) {
 	}
 	return null;
 }
-
+// 将输入的值$string里的存在双引号（"）前添加反斜杠
 function daddslashes($string, $force = 1) {
 	if(is_array($string)) {
 		$keys = array_keys($string);
@@ -130,7 +130,7 @@ function daddslashes($string, $force = 1) {
 			$string[addslashes($key)] = daddslashes($val, $force);
 		}
 	} else {
-		$string = addslashes($string);
+		$string = addslashes($string);      // 将输入的值里的每个存在双引号（"）前添加反斜杠：
 	}
 	return $string;
 }
@@ -200,7 +200,7 @@ function dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALS
 	require_once libfile('function/filesock');
 	return _dfsockopen($url, $limit, $post, $cookie, $bysocket, $ip, $timeout, $block, $encodetype, $allowcurl, $position, $files);
 }
-
+// html特殊字符转义,HTML编码,$string:要转义的字符，$flags:转义的编码,如utf-8、ISO-8859-1
 function dhtmlspecialchars($string, $flags = null) {
 	if(is_array($string)) {
 		foreach($string as $key => $val) {
@@ -256,7 +256,7 @@ function dheader($string, $replace = true, $http_response_code = 0) {
 		exit();
 	}
 }
-
+// php针对于 cookie 的设置
 function dsetcookie($var, $value = '', $life = 0, $prefix = 1, $httponly = false) {
 
 	global $_G;
@@ -690,10 +690,10 @@ function loaducenter() {
 	require_once DISCUZ_ROOT.'./config/config_ucenter.php';
 	require_once DISCUZ_ROOT.'./uc_client/client.php';
 }
-
+// 加载 $cachenames 数组里所有/字符 缓存
 function loadcache($cachenames, $force = false) {
 	global $_G;
-	static $loadedcache = array();
+	static $loadedcache = array();      // 静态列表 内存保存缓存列表
 	$cachenames = is_array($cachenames) ? $cachenames : array($cachenames);
 	$caches = array();
 	foreach ($cachenames as $k) {
@@ -909,7 +909,7 @@ function cutstr($string, $length, $dot = ' ...') {
 	}
 	return $strcut.$dot;
 }
-
+// 删除参数里面（包括数组）的 由 addslashes() 函数添加的反斜杠，意思就是删除$string里面所有的反斜杠
 function dstripslashes($string) {
 	if(empty($string)) return $string;
 	if(is_array($string)) {
@@ -1888,7 +1888,7 @@ function getexpiration() {
 	return mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']) + 86400;
 }
 
-function return_bytes($val) {
+function return_bytes($val) {       // 输入128M 返回字节数：134
     $val = trim($val);
     $last = strtolower($val{strlen($val)-1});
     switch($last) {

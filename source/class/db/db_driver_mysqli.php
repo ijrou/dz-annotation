@@ -10,10 +10,10 @@
 if(!defined('IN_DISCUZ')) {
 	exit('Access Denied');
 }
-
+//
 class db_driver_mysqli
 {
-	var $tablepre;
+	var $tablepre;      // 表前缀，pre_
 	var $version = '';
 	var $drivertype = 'mysqli';
 	var $querynum = 0;
@@ -32,7 +32,7 @@ class db_driver_mysqli
 
 	function set_config($config) {
 		$this->config = &$config;
-		$this->tablepre = $config['1']['tablepre'];
+		$this->tablepre = $config['1']['tablepre'];     // 表前缀,pre_
 		if(!empty($this->config['map'])) {
 			$this->map = $this->config['map'];
 			for($i = 1; $i <= 100; $i++) {
@@ -58,7 +58,7 @@ class db_driver_mysqli
 			}
 		}
 	}
-
+    // 开始创建数据库连接对象db
 	function connect($serverid = 1) {
 
 		if(empty($this->config) || empty($this->config[$serverid])) {
@@ -79,9 +79,9 @@ class db_driver_mysqli
 
 	function _dbconnect($dbhost, $dbuser, $dbpw, $dbcharset, $dbname, $pconnect, $halt = true) {
 
-		$link = new mysqli();
+		$link = new mysqli();  // 连接并选择数据库
 		if(!$link->real_connect($dbhost, $dbuser, $dbpw, $dbname, null, null, MYSQLI_CLIENT_COMPRESS)) {
-			$halt && $this->halt('notconnect', $this->errno());
+			$halt && $this->halt('notconnect', $this->errno());     // 连接错误，抛出异常
 		} else {
 			$this->curlink = $link;
 			if($this->version() > '4.1') {

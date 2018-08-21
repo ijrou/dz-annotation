@@ -62,8 +62,8 @@ class discuz_application extends discuz_base{
 
 	public function init() {
 		if(!$this->initated) {
-			$this->_init_db();
-			$this->_init_setting();
+			$this->_init_db();              // 初始化db数据库连接对象  $link
+			$this->_init_setting();         // 挺多的，不知道干嘛
 			$this->_init_user();
 			$this->_init_session();
 			$this->_init_mobile();
@@ -243,7 +243,7 @@ class discuz_application extends discuz_base{
 		$prelength = strlen($this->config['cookie']['cookiepre']);
 		foreach($_COOKIE as $key => $val) {
 			if(substr($key, 0, $prelength) == $this->config['cookie']['cookiepre']) {             // 将和 [cookie][cookiepre] 前缀一样的cookie的值加入到 var['cookie'] 中
-				$this->var['cookie'][substr($key, $prelength)] = $val;
+				$this->var['cookie'][substr($key, $prelength)] = $val;          // 将请求的url的cookie全部存储到 this->var[cookie] 里面
 			}
 		}
 
@@ -266,7 +266,7 @@ class discuz_application extends discuz_base{
 			}
 		}
 
-		$this->var['mod'] = empty($_GET['mod']) ? '' : dhtmlspecialchars($_GET['mod']);         // mod
+		$this->var['mod'] = empty($_GET['mod']) ? '' : dhtmlspecialchars($_GET['mod']);         // 获取GET请求中mod的值
 		$this->var['inajax'] = empty($_GET['inajax']) ? 0 : (empty($this->var['config']['output']['ajaxvalidate']) ? 1 : ($_SERVER['REQUEST_METHOD'] == 'GET' && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' || $_SERVER['REQUEST_METHOD'] == 'POST' ? 1 : 0));
 		$this->var['page'] = empty($_GET['page']) ? 1 : max(1, intval($_GET['page']));          // 提取页数，如果不存在则为1
 		$this->var['sid'] = $this->var['cookie']['sid'] = isset($this->var['cookie']['sid']) ? dhtmlspecialchars($this->var['cookie']['sid']) : '';         // 如果设置了[cookie][sid] 则对参数进行html编码后传回自本身
@@ -327,9 +327,9 @@ class discuz_application extends discuz_base{
 
 
 		if($this->config['security']['attackevasive'] && (!defined('CURSCRIPT') || !in_array($this->var['mod'], array('seccode', 'secqaa', 'swfupload')) && !defined('DISABLEDEFENSE'))) {
-			require_once libfile('misc/security', 'include');       //    /source/include/misc/misc_security.php
+			require_once libfile('misc/security', 'include');       //    /source/include/misc/misc_security.php    方式CC攻击??
 		}
-
+        // 如果页面存在压缩标识，且该标识不为gzip时，设置config 的 gzip 为false
 		if(!empty($_SERVER['HTTP_ACCEPT_ENCODING']) && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === false) {        // 判断如果没有使用gzip压缩网页时设置config[output][gzip]为false,默认false
 			$this->config['output']['gzip'] = false;
 		}
@@ -341,7 +341,7 @@ class discuz_application extends discuz_base{
 			ob_start();
 		}
 
-		setglobal('charset', $this->config['output']['charset']);
+		setglobal('charset', $this->config['output']['charset']);           // 设置全局变量的输出编码为 utf-8
 		define('CHARSET', $this->config['output']['charset']);
 		if($this->config['output']['forceheader']) {
 			@header('Content-Type: text/html; charset='.CHARSET);
@@ -399,14 +399,14 @@ class discuz_application extends discuz_base{
 		}
 		return $ip == '::1' ? '127.0.0.1' : $ip;
 	}
-
+    // 初始化数据库连接对象
 	private function _init_db() {
 		if($this->init_db) {
-			$driver = function_exists('mysql_connect') ? 'db_driver_mysql' : 'db_driver_mysqli';
+			$driver = function_exists('mysql_connect') ? 'db_driver_mysql' : 'db_driver_mysqli';        // php5.5起已废弃mysql_connect函数，自7.0起已移除
 			if(getglobal('config/db/slave')) {
 				$driver = function_exists('mysql_connect') ? 'db_driver_mysql_slave' : 'db_driver_mysqli_slave';
 			}
-			DB::init($driver, $this->config['db']);
+			DB::init($driver, $this->config['db']);     // 初始化db数据库连接对象
 		}
 	}
 
@@ -681,7 +681,7 @@ class discuz_application extends discuz_base{
 	private function _init_setting() {
 		if($this->init_setting) {
 			if(empty($this->var['setting'])) {
-				$this->cachelist[] = 'setting';
+				$this->cachelist[] = 'setting';     // 将setting加入$this->cachelist 缓存列表里
 			}
 
 			if(empty($this->var['style'])) {
@@ -693,7 +693,7 @@ class discuz_application extends discuz_base{
 			}
 		}
 
-		!empty($this->cachelist) && loadcache($this->cachelist);
+		!empty($this->cachelist) && loadcache($this->cachelist);            // 加载缓存列表里所有缓存
 
 		if(!is_array($this->var['setting'])) {
 			$this->var['setting'] = array();

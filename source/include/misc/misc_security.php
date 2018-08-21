@@ -6,7 +6,7 @@
  *
  *      $Id: misc_security.php 25889 2011-11-24 09:52:20Z monkey $
  */
-
+// 防御CC攻击  被 discuz_application.php  330行调用
 if(!defined('IN_DISCUZ')) {
 	exit('Access Denied');
 }
