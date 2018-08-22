@@ -690,7 +690,7 @@ function loaducenter() {
 	require_once DISCUZ_ROOT.'./config/config_ucenter.php';
 	require_once DISCUZ_ROOT.'./uc_client/client.php';
 }
-// 加载 $cachenames 数组里所有/字符 缓存
+// 加载 $cachenames 数组里所有/字符 缓存   被 discuz_application.php     696行 调用
 function loadcache($cachenames, $force = false) {
 	global $_G;
 	static $loadedcache = array();      // 静态列表 内存保存缓存列表
@@ -704,7 +704,7 @@ function loadcache($cachenames, $force = false) {
 	}
 
 	if(!empty($caches)) {
-		$cachedata = C::t('common_syscache')->fetch_all($caches);
+		$cachedata = C::t('common_syscache')->fetch_all($caches);           // 重要 important
 		foreach($cachedata as $cname => $data) {
 			if($cname == 'setting') {
 				$_G['setting'] = $data;

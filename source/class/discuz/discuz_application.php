@@ -63,8 +63,8 @@ class discuz_application extends discuz_base{
 	public function init() {
 		if(!$this->initated) {
 			$this->_init_db();              // 初始化db数据库连接对象  $link
-			$this->_init_setting();         // 挺多的，不知道干嘛
-			$this->_init_user();
+			$this->_init_setting();         // 根据cachelisst列表获取数据库里面所有的设置并缓存到对象里，其中包括redies持久化的设置
+			$this->_init_user();            //
 			$this->_init_session();
 			$this->_init_mobile();
 			$this->_init_cron();
@@ -693,7 +693,7 @@ class discuz_application extends discuz_base{
 			}
 		}
 
-		!empty($this->cachelist) && loadcache($this->cachelist);            // 加载缓存列表里所有缓存
+		!empty($this->cachelist) && loadcache($this->cachelist);            // 从数据库中加载缓存列表(表名)里所有数据到$G对象里缓存起来
 
 		if(!is_array($this->var['setting'])) {
 			$this->var['setting'] = array();

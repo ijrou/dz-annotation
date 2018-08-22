@@ -61,7 +61,7 @@ class db_driver_mysqli
     // 开始创建数据库连接对象db
 	function connect($serverid = 1) {
 
-		if(empty($this->config) || empty($this->config[$serverid])) {
+		if(empty($this->config) || empty($this->config[$serverid])) {       // 判断连接的config配置是否存在，判断连接信息对象是否存在
 			$this->halt('config_db_not_found');
 		}
 
@@ -85,7 +85,7 @@ class db_driver_mysqli
 		} else {
 			$this->curlink = $link;
 			if($this->version() > '4.1') {
-				$link->set_charset($dbcharset ? $dbcharset : $this->config[1]['dbcharset']);
+				$link->set_charset($dbcharset ? $dbcharset : $this->config[1]['dbcharset']);        // 设置数据库的默认字符编码
 				$serverset = $this->version() > '5.0.1' ? 'sql_mode=\'\',' : '';
 				$serverset .= 'character_set_client=binary';
 				$serverset && $link->query("SET $serverset");
@@ -202,7 +202,7 @@ class db_driver_mysqli
 	function fetch_fields($query) {
 		return $query ? $query->fetch_field() : null;
 	}
-
+    // 获取数据库的版本，这里是mysql 5.7.22
 	function version() {
 		if(empty($this->version)) {
 			$this->version = $this->curlink->server_info;

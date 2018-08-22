@@ -11,7 +11,7 @@ error_reporting(E_ALL);         // 规定不同的错误级别报告，E_ALL：�
 
 define('IN_DISCUZ', true);
 define('DISCUZ_ROOT', substr(dirname(__FILE__), 0, -12));           // 退到根目录
-define('DISCUZ_CORE_DEBUG', false);
+define('DISCUZ_CORE_DEBUG', false);             // 代码调试模式 false
 define('DISCUZ_TABLE_EXTENDABLE', false);
 
 set_exception_handler(array('core', 'handleException'));            // 设置用户定义的异常处理函数：
@@ -49,7 +49,7 @@ class core
 		}
 		return self::$_app;
 	}
-
+    // 被 /source/function/function_core.php     707行  调用     表格  common_syscache   表格兼容？
 	public static function t($name) {
 		return self::_make_obj($name, 'table', DISCUZ_TABLE_EXTENDABLE);
 	}
