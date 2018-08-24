@@ -43,7 +43,7 @@ function setglobal($key , $value, $group = null) {
 // 获取配置文件里的信息，注意，这里的配置文件其实已经读取到$G这个全局对象里面了
 function getglobal($key, $group = null) {
 	global $_G;
-	$key = explode('/', $group === null ? $key : $group.'/'.$key);
+	$key = explode('/', $group === null ? $key : $group.'/'.$key);      // explode 把字符串打散为数组
 	$v = &$_G;
 	foreach ($key as $k) {
 		if (!isset($v[$k])) {
@@ -256,7 +256,14 @@ function dheader($string, $replace = true, $http_response_code = 0) {
 		exit();
 	}
 }
-// php针对于 cookie 的设置
+/**
+ *  php 对 cookie 的扩展：设置 cookie 值
+ * @param $var   设置cookie的key
+ * @param string $value     对应key的值 value
+ * @param int $life     cookie 的生命周期，过期时间
+ * @param int $prefix       设置cookie 的key的前缀，如果为true或1，那么加入 $_G['config']['cookie']['cookiepre']设置好的前缀
+ * @param bool $httponly    cookie作用域 是否加上 ；httponly ,加上后页面js就无法访问cookie内容，防止xss攻击，注意：php版本为5.2.0以下
+ */
 function dsetcookie($var, $value = '', $life = 0, $prefix = 1, $httponly = false) {
 
 	global $_G;
@@ -265,19 +272,19 @@ function dsetcookie($var, $value = '', $life = 0, $prefix = 1, $httponly = false
 
 	$_G['cookie'][$var] = $value;
 	$var = ($prefix ? $config['cookiepre'] : '').$var;
-	$_COOKIE[$var] = $value;
+	$_COOKIE[$var] = $value;            // 将cookie存储到超全局$_COOKIE内，可在任何地方调用
 
 	if($value == '' || $life < 0) {
 		$value = '';
 		$life = -1;
 	}
 
-	if(defined('IN_MOBILE')) {
+	if(defined('IN_MOBILE')) {      // 判断是否设置了 手机
 		$httponly = false;
 	}
 
-	$life = $life > 0 ? getglobal('timestamp') + $life : ($life < 0 ? getglobal('timestamp') - 31536000 : 0);
-	$path = $httponly && PHP_VERSION < '5.2.0' ? $config['cookiepath'].'; HttpOnly' : $config['cookiepath'];
+	$life = $life > 0 ? getglobal('timestamp') + $life : ($life < 0 ? getglobal('timestamp') - 31536000 : 0);           // cookie有效期
+	$path = $httponly && PHP_VERSION < '5.2.0' ? $config['cookiepath'].'; HttpOnly' : $config['cookiepath'];        // cookie作用域，在 php版本为5.2.0以下的如果$httponly为true，那么在cookie加入 ；httponly,这样页面的js就无法访问cookie内容，防止xss攻击
 
 	$secure = $_SERVER['SERVER_PORT'] == 443 ? 1 : 0;
 	if(PHP_VERSION < '5.2.0') {
@@ -369,7 +376,7 @@ function isemail($email) {
 function quescrypt($questionid, $answer) {
 	return $questionid > 0 && $answer != '' ? substr(md5($answer.md5($questionid)), 16, 8) : '';
 }
-
+// 生成随机数，$length：随机数的长度
 function random($length, $numeric = 0) {
 	$seed = base_convert(md5(microtime().$_SERVER['DOCUMENT_ROOT']), 16, $numeric ? 10 : 35);
 	$seed = $numeric ? (str_replace('0', '', $seed).'012340567890') : ($seed.'zZ'.strtoupper($seed));

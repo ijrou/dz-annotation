@@ -15,7 +15,7 @@ define('CURSCRIPT', 'forum');
 require './source/class/class_core.php';
 
 
-require './source/function/function_forum.php';
+require './source/function/function_forum.php';         // 导入  forum 的 函数库，以备调用
 
 
 $modarray = array('ajax','announcement','attachment','forumdisplay',
@@ -41,19 +41,19 @@ $modcachelist = array(
 
 $mod = !in_array(C::app()->var['mod'], $modarray) ? 'index' : C::app()->var['mod'];         // 提取当前模块,也就是get请求的mod的参数   discuz_application.php   269行
 
-define('CURMODULE', $mod);          // 设置当前模块
+define('CURMODULE', $mod);          // 设置当前模块           这个是在  source/class/discuz/discuz_application.php     269行 设置的
 $cachelist = array();
 if(isset($modcachelist[CURMODULE])) {
-	$cachelist = $modcachelist[CURMODULE];
+	$cachelist = $modcachelist[CURMODULE];      // 将制定的页面，如index页面所对应内的列表通过数据库或其他持久化数据方式缓存出对应的内容
 
-	$cachelist[] = 'plugin';
-	$cachelist[] = 'pluginlanguage_system';
+	$cachelist[] = 'plugin';        // 向数组列表$cachelist插入   plugin
+	$cachelist[] = 'pluginlanguage_system';         //  向数组列表$cachelist插入   pluginlanguage_system
 }
 if(C::app()->var['mod'] == 'group') {
-	$_G['basescript'] = 'group';
+	$_G['basescript'] = 'group';            // 如果页面是group，那么。。。
 }
 
-C::app()->cachelist = $cachelist;
+C::app()->cachelist = $cachelist;           // 向核心类的对象cachelist添加需要进一步缓存数据的对象列表
 C::app()->init();               // 重要
 
 loadforum();

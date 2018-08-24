@@ -54,8 +54,8 @@ class discuz_application extends discuz_base{
 	}
 
 	public function __construct() {
-		$this->_init_env();         // 初始化环境，生成 this->$G 对象
-		$this->_init_config();          // 配置config 和 cookie
+		$this->_init_env();         // 初始化环境,如：全局报错等级，字符编码，网页压缩，包含通用函数库funcction_core.php，内存分配大小，爬虫检查，生成全局 $G 对象,将该对象的引用传给 当前对象的$var 对象绑定，两者其中修改则影响启用一个
+		$this->_init_config();          // 载入全局配置文件 config/config_global.php 里所有数据到当前对象的config对象， cookie的 path 和 pre生成
 		$this->_init_input();           // 对客户请求的内容进行初始化，如cookie数据保存到全局变量/请求的分页/请求过来的数据兼容/cookie里的autokey的生成和签名
 		$this->_init_output();          // 输出给客户端的设置
 	}
@@ -89,7 +89,7 @@ class discuz_application extends discuz_base{
 		define('MB_ENABLE', function_exists('mb_convert_encoding'));            // mb_convert_encoding:转换字符编码 如：utf-8 转 gb2312或gbk
 		define('EXT_OBGZIP', function_exists('ob_gzhandler'));          // 网页压缩输出到客户浏览器端
 
-		define('TIMESTAMP', time());            // 当前时间戳
+		define('TIMESTAMP', time());            // 当前时间戳,主要用户获取cookie的时间戳有效时间     /source/function/function_core.php     286行
 		$this->timezone_set();
         // 调用通用函数库，这里需要进入 function_core.php
 		if(!defined('DISCUZ_CORE_FUNCTION') && !@include(DISCUZ_ROOT.'./source/function/function_core.php')) {
@@ -256,26 +256,26 @@ class discuz_application extends discuz_base{
 			$_GET['page'] = rawurlencode($_GET['page']);        // 如果存在分页，那么将分页的参数URL编码
 		}
 
-		if(!(!empty($_GET['handlekey']) && preg_match('/^\w+$/', $_GET['handlekey']))) {
+		if(!(!empty($_GET['handlekey']) && preg_match('/^\w+$/', $_GET['handlekey']))) {            // 如果get请求存在handlekey 且handlekey有值，那么释放该变量，不设置他
 			unset($_GET['handlekey']);
 		}
 
-		if(!empty($this->var['config']['input']['compatible'])) {
+		if(!empty($this->var['config']['input']['compatible'])) {           // 针对php5.3或以下的请求数据的兼容性处理
 			foreach($_GET as $k => $v) {
-				$this->var['gp_'.$k] = daddslashes($v);
+				$this->var['gp_'.$k] = daddslashes($v);         // 将GET请求的所有内容兼容性处理(冒号前加单引号)并存储到 $this->>var['gp_'.$key]对象内
 			}
 		}
 
 		$this->var['mod'] = empty($_GET['mod']) ? '' : dhtmlspecialchars($_GET['mod']);         // 获取GET请求中mod的值
 		$this->var['inajax'] = empty($_GET['inajax']) ? 0 : (empty($this->var['config']['output']['ajaxvalidate']) ? 1 : ($_SERVER['REQUEST_METHOD'] == 'GET' && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' || $_SERVER['REQUEST_METHOD'] == 'POST' ? 1 : 0));
 		$this->var['page'] = empty($_GET['page']) ? 1 : max(1, intval($_GET['page']));          // 提取页数，如果不存在则为1
-		$this->var['sid'] = $this->var['cookie']['sid'] = isset($this->var['cookie']['sid']) ? dhtmlspecialchars($this->var['cookie']['sid']) : '';         // 如果设置了[cookie][sid] 则对参数进行html编码后传回自本身
+		$this->var['sid'] = $this->var['cookie']['sid'] = isset($this->var['cookie']['sid']) ? dhtmlspecialchars($this->var['cookie']['sid']) : '';         // 如果设置了[cookie][sid] 则对参数进行html编码后传回自本身和$this->$var['sid']内
 
-		if(empty($this->var['cookie']['saltkey'])) {            // saltkey 生成算法，一般用于第一次访问网站时自动生成
-			$this->var['cookie']['saltkey'] = random(8);
-			dsetcookie('saltkey', $this->var['cookie']['saltkey'], 86400 * 30, 1, 1);
+		if(empty($this->var['cookie']['saltkey'])) {            // saltkey 生成盐key值，用于生成签名，一般用于第一次访问网站时自动生成
+			$this->var['cookie']['saltkey'] = random(8);        // 生成8为随机数为盐key值
+			dsetcookie('saltkey', $this->var['cookie']['saltkey'], 86400 * 30, 1, 1);           // 将该盐key值设置到cookie中
 		}
-		$this->var['authkey'] = md5($this->var['config']['security']['authkey'].$this->var['cookie']['saltkey']);           // authkey 签名
+		$this->var['authkey'] = md5($this->var['config']['security']['authkey'].$this->var['cookie']['saltkey']);           // 通过saltkey 和 私钥加密生成一个 authkey 签名保存到$this->var['autokey']中以备调用
 
 	}
     // 初始化配置文件
@@ -298,7 +298,7 @@ class discuz_application extends discuz_base{
         // 设定DeBug调试模式
 		if(empty($_config['debug']) || !file_exists(libfile('function/debug'))) {
 			define('DISCUZ_DEBUG', false);
-			error_reporting(0);
+			error_reporting(0);             // 如果没有配置debug的config,那么设置错误等级为 0
 		} elseif($_config['debug'] === 1 || $_config['debug'] === 2 || !empty($_REQUEST['debug']) && $_REQUEST['debug'] === $_config['debug']) {
 			define('DISCUZ_DEBUG', true);
 			error_reporting(E_ERROR);
@@ -310,7 +310,7 @@ class discuz_application extends discuz_base{
 			error_reporting(0);
 		}
 		define('STATICURL', !empty($_config['output']['staticurl']) ? $_config['output']['staticurl'] : 'static/');     // 静态地址  static/
-		$this->var['staticurl'] = STATICURL;        // 静态地址加入var对象中
+		$this->var['staticurl'] = STATICURL;        // 静态地址加入到当前对象内的var对象中
 
 		$this->config = & $_config;                 // 将 $_config 数组的引用给 $this->config
 		$this->var['config'] = & $_config;          // 将 $_config 数组的引用给 $this->var['config']
@@ -338,13 +338,13 @@ class discuz_application extends discuz_base{
 		setglobal('gzipcompress', $allowgzip);          // 
 
 		if(!ob_start($allowgzip ? 'ob_gzhandler' : null)) {
-			ob_start();
+			ob_start();         /// 开启缓冲区,这样后 每次 echo后输出的内容都会保存到缓冲区里，通过ob_get_contents() 来取缓冲区内的内容
 		}
 
 		setglobal('charset', $this->config['output']['charset']);           // 设置全局变量的输出编码为 utf-8
 		define('CHARSET', $this->config['output']['charset']);
 		if($this->config['output']['forceheader']) {
-			@header('Content-Type: text/html; charset='.CHARSET);
+			@header('Content-Type: text/html; charset='.CHARSET);       // 设置 输出html文本时加入编码头信息
 		}
 
 	}

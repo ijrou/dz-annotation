@@ -11,7 +11,7 @@ $_config['db']['1']['dbcharset'] = 'utf8';      // /source/class/db/db_driver_my
 $_config['db']['1']['pconnect'] = '0';
 $_config['db']['1']['dbname'] = 'ultrax';
 $_config['db']['1']['tablepre'] = 'pre_';
-$_config['db']['slave'] = '';
+$_config['db']['slave'] = '';           //     /source/class/discuz/discuz_application.php    406行
 $_config['db']['common']['slave_except_table'] = '';
 
 // --------------------------  CONFIG MEMORY  --------------------------- //
@@ -53,7 +53,7 @@ $_config['output']['ajaxvalidate'] = '0';           // discuz_application.php   
 $_config['output']['iecompatible'] = '0';
 
 // --------------------------  CONFIG COOKIE  --------------------------- //
-$_config['cookie']['cookiepre'] = '4kcw_';
+$_config['cookie']['cookiepre'] = '4kcw_';          //       /source/function/function_core.php    274行,设置cookie的key名的前缀
 $_config['cookie']['cookiedomain'] = '';
 $_config['cookie']['cookiepath'] = '/';
 

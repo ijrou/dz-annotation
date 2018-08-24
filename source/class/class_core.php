@@ -102,13 +102,13 @@ class core
 	public static function import($name, $folder = '', $force = true) {
 		$key = $folder.$name;
 		if(!isset(self::$_imports[$key])) {         // 判断是否原先已经调用过了..
-			$path = DISCUZ_ROOT.'/source/'.$folder;
+			$path = DISCUZ_ROOT.'/source/'.$folder;         //   root + /source/ + $folder
 			if(strpos($name, '/') !== false) {
 				$pre = basename(dirname($name));
 				$filename = dirname($name).'/'.$pre.'_'.basename($name).'.php';
 			} else {
 				$filename = $name.'.php';
-			}
+			}                       //  folder: c    if name: class/a    $filename: class/class_a.php                if $name: class/a/b      $filename: class/a/a_b.php
 
 			if(is_file($path.'/'.$filename)) {
 				include $path.'/'.$filename;
@@ -148,7 +148,7 @@ class core
 			$file = 'class/'.$folder.'/'.substr($class, strlen($folder) + 1);       //  class/数组下标1的值/数组下标2的值
 		} else {
 			$file = 'class/'.$class;        // class/类名
-		}
+		}           //  a_b ->    class/a/b        a ->  class/a
 
 		try {
 
