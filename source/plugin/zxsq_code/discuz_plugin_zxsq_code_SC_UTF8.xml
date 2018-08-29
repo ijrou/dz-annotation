@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+	<item id="Title"><![CDATA[Discuz! Plugin]]></item>
+	<item id="Version"><![CDATA[X2,X2.5,X3,X3.1,X3.2,F1.0,L1.0,X3.3,X3.4]]></item>
+	<item id="Time"><![CDATA[2018-06-06 01:29]]></item>
+	<item id="From"><![CDATA[代码高亮]]></item>
+	<item id="Data">
+		<item id="plugin">
+			<item id="available"><![CDATA[1]]></item>
+			<item id="adminid"><![CDATA[1]]></item>
+			<item id="name"><![CDATA[代码高亮]]></item>
+			<item id="identifier"><![CDATA[zxsq_code]]></item>
+			<item id="description"><![CDATA[代码高亮。标签[pre][/pre]]]></item>
+			<item id="datatables"><![CDATA[]]></item>
+			<item id="directory"><![CDATA[zxsq_code/]]></item>
+			<item id="copyright"><![CDATA[ijrou（www.ijrou.com）]]></item>
+			<item id="version"><![CDATA[v1.4.1]]></item>
+			<item id="__modules">
+				<item id="general">
+					<item id="name"><![CDATA[code]]></item>
+					<item id="displayorder"><![CDATA[0]]></item>
+					<item id="menu"><![CDATA[]]></item>
+					<item id="url"><![CDATA[]]></item>
+					<item id="type"><![CDATA[11]]></item>
+					<item id="adminid"><![CDATA[0]]></item>
+					<item id="navtitle"><![CDATA[]]></item>
+					<item id="navicon"><![CDATA[]]></item>
+					<item id="navsubname"><![CDATA[]]></item>
+					<item id="navsuburl"><![CDATA[]]></item>
+					<item id="hooks">
+						<item id="common">
+							<item id="footer.htm">
+								<item id="global_footer"><![CDATA[global_footer]]></item>
+							</item>
+							<item id="header.htm">
+								<item id="global_header"><![CDATA[global_header]]></item>
+							</item>
+						</item>
+					</item>
+				</item>
+				<item id="mobile">
+					<item id="name"><![CDATA[code]]></item>
+					<item id="displayorder"><![CDATA[0]]></item>
+					<item id="menu"><![CDATA[]]></item>
+					<item id="url"><![CDATA[]]></item>
+					<item id="type"><![CDATA[28]]></item>
+					<item id="adminid"><![CDATA[0]]></item>
+					<item id="navtitle"><![CDATA[]]></item>
+					<item id="navicon"><![CDATA[]]></item>
+					<item id="navsubname"><![CDATA[]]></item>
+					<item id="navsuburl"><![CDATA[]]></item>
+					<item id="hooks">
+						<item id="common">
+							<item id="header.htm">
+								<item id="global_header_mobile"><![CDATA[global_header_mobile]]></item>
+							</item>
+						</item>
+					</item>
+				</item>
+				<item id="1999">
+					<item id="name"><![CDATA[admincp_addonymg]]></item>
+					<item id="menu"><![CDATA[<span style="color:#E53333;"><b>联系作者</b></span>]]></item>
+					<item id="url"><![CDATA[]]></item>
+					<item id="type"><![CDATA[3]]></item>
+					<item id="adminid"><![CDATA[0]]></item>
+					<item id="displayorder"><![CDATA[0]]></item>
+					<item id="navtitle"><![CDATA[]]></item>
+					<item id="navicon"><![CDATA[]]></item>
+					<item id="navsubname"><![CDATA[]]></item>
+					<item id="navsuburl"><![CDATA[]]></item>
+				</item>
+			</item>
+		</item>
+		<item id="version"><![CDATA[X2,X2.5,X3,X3.1,X3.2,F1.0,L1.0,X3.3,X3.4]]></item>
+		<item id="var">
+			<item id="0">
+				<item id="displayorder"><![CDATA[0]]></item>
+				<item id="title"><![CDATA[代码框最大高度]]></item>
+				<item id="description"><![CDATA[控制代码框的最大高度，超过高度将滚动浏览]]></item>
+				<item id="variable"><![CDATA[codeHeight]]></item>
+				<item id="type"><![CDATA[number]]></item>
+				<item id="value"><![CDATA[0]]></item>
+				<item id="extra"><![CDATA[]]></item>
+			</item>
+			<item id="1">
+				<item id="displayorder"><![CDATA[0]]></item>
+				<item id="title"><![CDATA[代码高亮样式]]></item>
+				<item id="description"><![CDATA[选择代码高亮的样式，各样式演示地址：https://highlightjs.org/static/demo/]]></item>
+				<item id="variable"><![CDATA[hilightStyle]]></item>
+				<item id="type"><![CDATA[select]]></item>
+				<item id="value"><![CDATA[default]]></item>
+				<item id="extra"><![CDATA[default=Default
+agate=Agate
+androidstudio=Androidstudio
+arta=Arta
+ascetic=Ascetic
+atelier-cave.dark=Atelier Cave Dark
+atelier-cave.light=Atelier Cave Light
+atelier-dune.dark=Atelier Dune Dark
+atelier-dune.light=Atelier Dune Light
+atelier-estuary.dark=Atelier Estuary Dark
+atelier-estuary.light=Atelier Estuary Light
+atelier-forest.dark=Atelier Forest Dark
+atelier-forest.light=Atelier Forest Light
+atelier-heath.dark=Atelier Heath Dark
+atelier-heath.light=Atelier Heath Light
+atelier-lakeside.dark=Atelier Lakeside Dark
+atelier-lakeside.light=Atelier Lakeside Light
+atelier-plateau.dark=Atelier Plateau Dark
+atelier-plateau.light=Atelier Plateau Light
+atelier-savanna.dark=Atelier Savanna Dark
+atelier-savanna.light=Atelier Savanna Light
+atelier-seaside.dark=Atelier Seaside Dark
+atelier-seaside.light=Atelier Seaside Light
+atelier-sulphurpool.dark=Atelier Sulphurpool Dark
+atelier-sulphurpool.light=Atelier Sulphurpool Light
+brown_paper=Brown Paper
+codepen-embed=Codepen Embed
+color-brewer=Color Brewer
+dark=Dark
+darkula=Darkula
+docco=Docco
+far=Far
+foundation=Foundation
+github-gist=Github Gist
+github=Github
+googlecode=Googlecode
+hybrid=Hybrid
+idea=Idea
+ir_black=Ir Black
+kimbie.dark=Kimbie Dark
+kimbie.light=Kimbie Light
+magula=Magula
+mono-blue=Mono Blue
+monokai=Monokai
+monokai_sublime=Monokai Sublime
+obsidian=Obsidian
+paraiso.dark=Paraiso Dark
+paraiso.light=Paraiso Light
+pojoaque=Pojoaque
+railscasts=Railscasts
+rainbow=Rainbow
+school_book=School Book
+solarized_dark=Solarized Dark
+solarized_light=Solarized Light
+sunburst=Sunburst
+tomorrow-night-blue=Tomorrow Night Blue
+tomorrow-night-bright=Tomorrow Night Bright
+tomorrow-night-eighties=Tomorrow Night Eighties
+tomorrow-night=Tomorrow Night
+tomorrow=Tomorrow
+vs=Vs
+xcode=Xcode
+zenburn=Zenburn]]></item>
+			</item>
+		</item>
+		<item id="language">
+			<item id="scriptlang">
+				<item id="title"><![CDATA[代码高亮]]></item>
+				<item id="main_title"><![CDATA[代码高亮]]></item>
+				<item id="close"><![CDATA[关闭]]></item>
+				<item id="submit"><![CDATA[提交]]></item>
+			</item>
+		</item>
+	</item>
+</root>

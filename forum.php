@@ -60,7 +60,7 @@ loadforum();
 
 set_rssauth();
 
-runhooks();
+runhooks();         // 执行钩子
 
 $navtitle = str_replace('{bbname}', $_G['setting']['bbname'], $_G['setting']['seotitle']['forum']);
 $_G['setting']['threadhidethreshold'] = 1;

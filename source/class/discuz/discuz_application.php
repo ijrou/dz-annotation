@@ -18,7 +18,7 @@ class discuz_application extends discuz_base{
 
 	var $session = null;
 
-	var $config = array();
+	var $config = array();          // 存储配置信息
 
 	var $var = array();
 
@@ -64,8 +64,8 @@ class discuz_application extends discuz_base{
 		if(!$this->initated) {
 			$this->_init_db();              // 初始化db数据库连接对象  $link
 			$this->_init_setting();         // 根据cachelisst列表获取数据库里面所有的设置并缓存到对象里，其中包括redies持久化的设置
-			$this->_init_user();            //
-			$this->_init_session();
+			$this->_init_user();            // 初始化用户数据
+			$this->_init_session();             // 初始化session
 			$this->_init_mobile();
 			$this->_init_cron();
 			$this->_init_misc();
@@ -144,8 +144,8 @@ class discuz_application extends discuz_base{
 			'member' => array(),
 			'group' => array(),
 			'cookie' => array(),
-			'style' => array(),
-			'cache' => array(),
+			'style' => array(),             // current php  687row
+			'cache' => array(),             // current php 692row
 			'session' => array(),
 			'lang' => array(),
 			'my_app' => array(),
@@ -409,7 +409,7 @@ class discuz_application extends discuz_base{
 			DB::init($driver, $this->config['db']);     // 初始化db数据库连接对象
 		}
 	}
-
+    // 初始化session
 	private function _init_session() {
 
 		$sessionclose = !empty($this->var['setting']['sessionclose']);
@@ -454,7 +454,7 @@ class discuz_application extends discuz_base{
 
 	private function _init_user() {
 		if($this->init_user) {
-			if($auth = getglobal('auth', 'cookie')) {
+			if($auth = getglobal('auth', 'cookie')) {       // 如果登陆了，那么从全局$_G取出cookie内的用户信息
 				$auth = daddslashes(explode("\t", authcode($auth, 'DECODE')));
 			}
 			list($discuz_pw, $discuz_uid) = empty($auth) || count($auth) < 2 ? array('', '') : $auth;
@@ -470,7 +470,7 @@ class discuz_application extends discuz_base{
 				$this->var['member'] = $user;
 			} else {
 				$user = array();
-				$this->_init_guest();
+				$this->_init_guest();       // 初始化访客？
 			}
 
 			if($user && $user['groupexpiry'] > 0 && $user['groupexpiry'] < TIMESTAMP) {
@@ -492,7 +492,7 @@ class discuz_application extends discuz_base{
 				dheader('location: home.php?mod=spacecp&ac=profile&op=password');
 			}
 
-			$this->cachelist[] = 'usergroup_'.$this->var['member']['groupid'];
+			$this->cachelist[] = 'usergroup_'.$this->var['member']['groupid'];      // 用户组？
 			if($user && $user['adminid'] > 0 && $user['groupid'] != $user['adminid']) {
 				$this->cachelist[] = 'admingroup_'.$this->var['member']['adminid'];
 			}
@@ -536,15 +536,15 @@ class discuz_application extends discuz_base{
 
 	private function _init_guest() {
 		$username = '';
-		$groupid = 7;
-		if(!empty($this->var['cookie']['con_auth_hash']) && ($openid = authcode($this->var['cookie']['con_auth_hash']))) {
+		$groupid = 7;           // 7：访客  ？？
+		if(!empty($this->var['cookie']['con_auth_hash']) && ($openid = authcode($this->var['cookie']['con_auth_hash']))) {// 如果登陆了，那么cookie变量里应该有con_auth_hash值的
 			$this->var['connectguest'] = 1;
 			$username = 'QQ_'.substr($openid, -6);
 			$this->var['setting']['cacheindexlife'] = 0;
 			$this->var['setting']['cachethreadlife'] = 0;
 			$groupid = $this->var['setting']['connect']['guest_groupid'] ? $this->var['setting']['connect']['guest_groupid'] : $this->var['setting']['newusergroupid'];
 		}
-		setglobal('member', array( 'uid' => 0, 'username' => $username, 'adminid' => 0, 'groupid' => $groupid, 'credits' => 0, 'timeoffset' => 9999));
+		setglobal('member', array( 'uid' => 0, 'username' => $username, 'adminid' => 0, 'groupid' => $groupid, 'credits' => 0, 'timeoffset' => 9999));      // 设置全局变量  $_G 保存用户会员信息到全局变量里
 	}
 
 	private function _init_cron() {
@@ -677,23 +677,23 @@ class discuz_application extends discuz_base{
 		$this->var['seodescription'] = !empty($this->var['setting']['seodescription'][CURSCRIPT]) ? $this->var['setting']['seodescription'][CURSCRIPT] : '';
 
 	}
-
+    // 初始化设置
 	private function _init_setting() {
 		if($this->init_setting) {
-			if(empty($this->var['setting'])) {
-				$this->cachelist[] = 'setting';     // 将setting加入$this->cachelist 缓存列表里
+			if(empty($this->var['setting'])) {      // Tips:这里刚开始为空的
+				$this->cachelist[] = 'setting';     // 将setting加入$this->cachelist 缓存列表里，这个列表在 /forum.php 56行 上被添加过
 			}
 
-			if(empty($this->var['style'])) {
+			if(empty($this->var['style'])) {        //  第一次用此属性，那么就没有被添加过
 				$this->cachelist[] = 'style_default';
 			}
 
-			if(!isset($this->var['cache']['cronnextrun'])) {
+			if(!isset($this->var['cache']['cronnextrun'])) {                    //  第一次用此属性，那么就没有被添加过
 				$this->cachelist[] = 'cronnextrun';
 			}
 		}
 
-		!empty($this->cachelist) && loadcache($this->cachelist);            // 从数据库中加载缓存列表(表名)里所有数据到$G对象里缓存起来
+		!empty($this->cachelist) && loadcache($this->cachelist);      // current php 95row        // 从数据库中加载缓存列表(列表中的字段都是表名)里所有数据到$G对象里缓存起来
 
 		if(!is_array($this->var['setting'])) {
 			$this->var['setting'] = array();

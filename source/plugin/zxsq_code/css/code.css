@@ -1,0 +1,50 @@
+pre {
+    background-color: #F8F8F8;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px;
+    padding: 2px;
+}
+/*code {font-family: Consolas, Monaco, Andale Mono, monospace;}*/
+
+@font-face {
+    font-family: 'consola';
+    src: url('./consola.ttf?v=4.7.0');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.hljs {
+    border: 0;
+    font-size: 12px;
+    display: block;
+    padding: 1px;
+    margin: 0;
+    width: 100%;
+    font-weight: 200;
+    white-space: pre-wrap;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    font-family:'consola',"Liberation Mono",Menlo,Courier,monospace;
+    background: #F7F7F7 url(https://fishc.com.cn/static/image/common/codebg.gif) repeat-y 0 0;
+    overflow: hidden;
+}
+.hljs ol {
+    list-style: decimal;
+    margin: 0px 0px 0 40px !important;
+    padding: 0px;
+}
+.hljs ol li {
+    list-style: decimal-leading-zero;
+    border-left: 2px solid #ddd !important;
+    margin: 0 !important;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 0 0 2px 8px;
+
+}
+
+.hljs ol li:hover {
+    background: #FFF;
+    color: #369;
+}

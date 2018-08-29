@@ -19,21 +19,21 @@ class discuz_memory extends discuz_base
 	private $prefix;
 	private $userprefix;
 	public $type;
-	public $enable = false;
+	public $enable = false;         // 是否启动了内存缓存 如果配置了对应的配置文件，并成功启动了内存缓存，那么这里会被修改为 true
 	public $debug = array();
 
 	public function __construct() {
 	}
-
+    // 初始化内存对象用到的配置信息，从配置对象来-> 从 配置文件 config_global.php来
 	public function init($config) {
 		$this->config = $config;
 		$this->prefix = empty($config['prefix']) ? substr(md5($_SERVER['HTTP_HOST']), 0, 6).'_' : $config['prefix'];
 		unset($this->config['prefix']);
 
 		foreach($this->config as $cache => $config) {
-			$available = is_array($config) ? !empty($config['server']) : !empty($config);
-			if($available && !is_object($this->memory)) {           // 载入 redis 等其他之类的内存管理的中间件
-				$class_name = 'memory_driver_'.$cache;
+			$available = is_array($config) ? !empty($config['server']) : !empty($config);       // 如果 config的server为空  那么就false
+			if($available && !is_object($this->memory)) {                  // 载入 redis 等其他之类的内存管理的中间件  配置缓存对象
+				$class_name = 'memory_driver_'.$cache;          // 调用 /source/class/memory/memory_driver_$cache.php
 				$this->memory = new $class_name();
 				$this->memory->init($config);
 				if(!$this->memory->enable) {

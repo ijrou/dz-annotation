@@ -16,7 +16,7 @@ class db_driver_mysqli
 	var $tablepre;      // 表前缀，pre_
 	var $version = '';
 	var $drivertype = 'mysqli';
-	var $querynum = 0;
+	var $querynum = 0;          // 查询到的总数
 	var $slaveid = 0;
 	var $curlink;
 	var $link = array();
@@ -96,7 +96,7 @@ class db_driver_mysqli
 
 	function table_name($tablename) {
 		if(!empty($this->map) && !empty($this->map[$tablename])) {
-			$id = $this->map[$tablename];
+			$id = $this->map[$tablename];       // 如果该表以前被用过，那么执行这里
 			if(!$this->link[$id]) {
 				$this->connect($id);
 			}
@@ -122,10 +122,10 @@ class db_driver_mysqli
 	function result_first($sql) {
 		return $this->result($this->query($sql), 0);
 	}
-
+    // 查询
 	public function query($sql, $silent = false, $unbuffered = false) {
-		if(defined('DISCUZ_DEBUG') && DISCUZ_DEBUG) {
-			$starttime = microtime(true);
+		if(defined('DISCUZ_DEBUG') && DISCUZ_DEBUG) {       // 如果是调试模式
+			$starttime = microtime(true);       // 返回当前的时间戳，表示要计时查询数据库时所耗时的时间起始点
 		}
 
 		if('UNBUFFERED' === $silent) {
@@ -136,7 +136,7 @@ class db_driver_mysqli
 			$unbuffered = false;
 		}
 
-		$resultmode = $unbuffered ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT;
+		$resultmode = $unbuffered ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT;        // 查询语句所需要的参数，如果什么都不传，那么就默认MYSQLI_STORE_RESULT    两者区别：https://blog.csdn.net/robertaqi/article/details/6068087
 
 		if(!($query = $this->curlink->query($sql, $resultmode))) {
 			if(in_array($this->errno(), array(2006, 2013)) && substr($silent, 0, 5) != 'RETRY') {

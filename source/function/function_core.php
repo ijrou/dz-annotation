@@ -13,16 +13,19 @@ if(!defined('IN_DISCUZ')) {
 
 define('DISCUZ_CORE_FUNCTION', true);
 
+// url编码
 function durlencode($url) {
 	static $fix = array('%21', '%2A','%3B', '%3A', '%40', '%26', '%3D', '%2B', '%24', '%2C', '%2F', '%3F', '%25', '%23', '%5B', '%5D');
 	static $replacements = array('!', '*', ';', ":", "@", "&", "=", "+", "$", ",", "/", "?", "%", "#", "[", "]");
 	return str_replace($fix, $replacements, urlencode($url));
 }
 
+// 系统错误，调用discuz_error函数
 function system_error($message, $show = true, $save = true, $halt = true) {
 	discuz_error::system_error($message, $show, $save, $halt);
 }
 
+// 更新session
 function updatesession() {
 	return C::app()->session->updatesession();
 }
@@ -73,6 +76,7 @@ function getgpc($k, $type='GP') {
 
 }
 
+// 通过用户id获取用户信息
 function getuserbyuid($uid, $fetch_archive = 0) {
 	static $users = array();
 	if(empty($users[$uid])) {
@@ -87,6 +91,7 @@ function getuserbyuid($uid, $fetch_archive = 0) {
 	return $users[$uid];
 }
 
+//
 function getuserprofile($field) {
 	global $_G;
 	if(isset($_G['member'][$field])) {
@@ -701,7 +706,7 @@ function loaducenter() {
 function loadcache($cachenames, $force = false) {
 	global $_G;
 	static $loadedcache = array();      // 静态列表 内存保存缓存列表
-	$cachenames = is_array($cachenames) ? $cachenames : array($cachenames);
+	$cachenames = is_array($cachenames) ? $cachenames : array($cachenames);         // 将输入的内容转化为数组
 	$caches = array();
 	foreach ($cachenames as $k) {
 		if(!isset($loadedcache[$k]) || $force) {
@@ -711,7 +716,7 @@ function loadcache($cachenames, $force = false) {
 	}
 
 	if(!empty($caches)) {
-		$cachedata = C::t('common_syscache')->fetch_all($caches);           // 重要 important
+		$cachedata = C::t('common_syscache')->fetch_all($caches);           // 重要 查询表  pre_common_syscache   系统公共缓存
 		foreach($cachedata as $cname => $data) {
 			if($cname == 'setting') {
 				$_G['setting'] = $data;
@@ -1120,11 +1125,11 @@ function output_ajax() {
 
 function runhooks($scriptextra = '') {
 	if(!defined('HOOKTYPE')) {
-		define('HOOKTYPE', !defined('IN_MOBILE') ? 'hookscript' : 'hookscriptmobile');
+		define('HOOKTYPE', !defined('IN_MOBILE') ? 'hookscript' : 'hookscriptmobile');      // 钩子类型：定义是PC钩子还是移动端钩子
 	}
 	if(defined('CURMODULE')) {
 		global $_G;
-		if($_G['setting']['plugins']['func'][HOOKTYPE]['common']) {
+		if($_G['setting']['plugins']['func'][HOOKTYPE]['common']) {         // 判断是是否是公共的钩子，如果为true,那么执行钩子
 			hookscript('common', 'global', 'funcs', array(), 'common');
 		}
 		hookscript(CURMODULE, $_G['basescript'], 'funcs', array(), '', $scriptextra);
@@ -1701,9 +1706,9 @@ function getposttablebytid($tids, $primary = 0) {
 function getposttable($tableid = 0, $prefix = false) {
 	return table_forum_post::getposttable($tableid, $prefix);
 }
-
+//  内存操作？？？？
 function memory($cmd, $key='', $value='', $ttl = 0, $prefix = '') {
-	if($cmd == 'check') {
+	if($cmd == 'check') {           // $cmd为 check 表示 检查是否启动了内存缓存？启动时 返回 type?
 		return  C::memory()->enable ? C::memory()->type : '';
 	} elseif(C::memory()->enable && in_array($cmd, array('set', 'get', 'rm', 'inc', 'dec'))) {
 		if(defined('DISCUZ_DEBUG') && DISCUZ_DEBUG) {

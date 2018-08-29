@@ -34,10 +34,10 @@ C::creatapp();      // 调用core类的静态方法 creatapp()
 
 class core
 {
-	private static $_tables;
-	private static $_imports;           // 记录已经import模块的数组，key:模块路径   value:true/false
+	private static $_tables;            // 存储使用过的表，类型 array
+	private static $_imports;           // 记录已经import模块的数组，key:模块路径   value:true/false      104/115row
 	private static $_app;
-	private static $_memory;
+	private static $_memory;        // 创建内存对象，用于存储对象的内存存储
 
 	public static function app() {
 		return self::$_app;
@@ -49,9 +49,9 @@ class core
 		}
 		return self::$_app;
 	}
-    // 被 /source/function/function_core.php     707行  调用     表格  common_syscache   表格兼容？
+    // 被 /source/function/function_core.php     719行  调用     表名 $name = common_syscache   表类型  表格兼容？
 	public static function t($name) {
-		return self::_make_obj($name, 'table', DISCUZ_TABLE_EXTENDABLE);
+		return self::_make_obj($name, 'table', DISCUZ_TABLE_EXTENDABLE);            // 表生成对象
 	}
 
 	public static function m($name) {
@@ -60,21 +60,21 @@ class core
 			$args = func_get_args();
 			unset($args[0]);
 		}
-		return self::_make_obj($name, 'model', true, $args);
+		return self::_make_obj($name, 'model', true, $args);            // 模块生成对象
 	}
-
+    // 根据名称生成对象？
 	protected static function _make_obj($name, $type, $extendable = false, $p = array()) {
 		$pluginid = null;   // __autoload
 		if($name[0] === '#') {
-			list(, $pluginid, $name) = explode('#', $name);
+			list(, $pluginid, $name) = explode('#', $name);     //  把字符串打散为数组(explode解释)，然后把该数组中的值赋给一些变量(list解释)
 		}
 		$cname = $type.'_'.$name;
-		if(!isset(self::$_tables[$cname])) {        // 判断该表是否设置了
+		if(!isset(self::$_tables[$cname])) {        // 如果该表[table_common_syscache]未设置
 			if(!class_exists($cname, false)) {              // 检查类是否已定义,第二个参数是：是否默认调用 __autoload。
 				self::import(($pluginid ? 'plugin/'.$pluginid : 'class').'/'.$type.'/'.$name);      // 未定义的话进入这里
 			}
-			if($extendable) {
-				self::$_tables[$cname] = new discuz_container();
+			if($extendable) {       // 这里我只看到 模块调用时为true,也就是本脚本的  63row
+				self::$_tables[$cname] = new discuz_container();        //  ??
 				switch (count($p)) {
 					case 0:	self::$_tables[$cname]->obj = new $cname();break;
 					case 1:	self::$_tables[$cname]->obj = new $cname($p[1]);break;
@@ -85,20 +85,20 @@ class core
 					default: $ref = new ReflectionClass($cname);self::$_tables[$cname]->obj = $ref->newInstanceArgs($p);unset($ref);break;
 				}
 			} else {
-				self::$_tables[$cname] = new $cname();
+				self::$_tables[$cname] = new $cname();      // $cnmae = ‌table_common_syscache      实例化对应的类，然后将对象保存到 self::$_tables的数组内 以便下次直接使用
 			}
 		}
-		return self::$_tables[$cname];
+		return self::$_tables[$cname];      // 将实例化的对象返回
 	}
 
 	public static function memory() {
 		if(!self::$_memory) {
-			self::$_memory = new discuz_memory();
+			self::$_memory = new discuz_memory();           // 创建内存存储
 			self::$_memory->init(self::app()->config['memory']);
 		}
 		return self::$_memory;
 	}
-    // 自动导入 php 类模块
+    // 自动导入 php 类模块   如：   class/table/syscache   ->   class/table/table_syscache.php
 	public static function import($name, $folder = '', $force = true) {
 		$key = $folder.$name;
 		if(!isset(self::$_imports[$key])) {         // 判断是否原先已经调用过了..

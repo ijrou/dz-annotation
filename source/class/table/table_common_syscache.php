@@ -10,7 +10,7 @@
 if(!defined('IN_DISCUZ')) {
 	exit('Access Denied');
 }
-
+// 表 公共系统缓存  继承 discuz_table 类
 class table_common_syscache extends discuz_table
 {
 	private $_isfilecache;
@@ -20,8 +20,8 @@ class table_common_syscache extends discuz_table
 		$this->_table = 'common_syscache';
 		$this->_pk    = 'cname';
 		$this->_pre_cache_key = '';
-		$this->_isfilecache = getglobal('config/cache/type') == 'file';
-		$this->_allowmem = memory('check');     // 加载内存管理数据的中间件
+		$this->_isfilecache = getglobal('config/cache/type') == 'file';         // 这里需要配置config文件才找到，是否以文件方式缓存
+		$this->_allowmem = memory('check');     // 加载内存管理数据的中间件，如果为配置，则为 ""
 
 		parent::__construct();          // 调用父类的构造函数
 	}
@@ -30,11 +30,11 @@ class table_common_syscache extends discuz_table
 		$data = $this->fetch_all(array($cachename));
 		return isset($data[$cachename]) ? $data[$cachename] : false;
 	}
-	public function fetch_all($cachenames) {
+	public function fetch_all($cachenames) {            // /source/function/function_core.php   719row
 
 		$data = array();
-		$cachenames = is_array($cachenames) ? $cachenames : array($cachenames);
-		if($this->_allowmem) {
+		$cachenames = is_array($cachenames) ? $cachenames : array($cachenames);         // 将输入的数据转换为 数组
+		if($this->_allowmem) {          // 如果 缓存 已开启
 			$data = memory('get', $cachenames);
 			$newarray = $data !== false ? array_diff($cachenames, array_keys($data)) : $cachenames;
 			if(empty($newarray)) {
@@ -44,7 +44,7 @@ class table_common_syscache extends discuz_table
 			}
 		}
 
-		if($this->_isfilecache) {
+		if($this->_isfilecache) {           // 如果缓存使用的是文件？
 			$lostcaches = array();
 			foreach($cachenames as $cachename) {
 				if(!@include_once(DISCUZ_ROOT.'./data/cache/cache_'.$cachename.'.php')) {

@@ -7,6 +7,7 @@
  *      $Id: discuz_database.php 36294 2016-12-14 03:11:30Z nemohou $
  */
 
+// 数据库 增删改查 核心类
 if(!defined('IN_DISCUZ')) {
 	exit('Access Denied');
 }
@@ -132,7 +133,7 @@ class discuz_database {         // 被discuz_application.php调用init   409行
 				$unbuffered = true;
 			}
 		}
-		self::checkquery($sql);
+		self::checkquery($sql);         // 检查sql语句
 
 		$ret = self::$db->query($sql, $silent, $unbuffered);
 		if (!$unbuffered && $ret) {
@@ -231,7 +232,7 @@ class discuz_database {         // 被discuz_application.php调用init   409行
 		$order = strtoupper($order) == 'ASC' || empty($order) ? 'ASC' : 'DESC';
 		return self::quote_field($field) . ' ' . $order;
 	}
-
+    // 处理表中的字段      $field: 表字段名    $val 字段名对应的数据，可以是数组，也可以是字符     $$glue 是要如何操作  是in?还是notin?
 	public static function field($field, $val, $glue = '=') {
 
 		$field = self::quote_field($field);
@@ -339,10 +340,10 @@ class discuz_database {         // 被discuz_application.php调用init   409行
 	}
 
 }
-
+// 数据库语法安全检查
 class discuz_database_safecheck {
 
-	protected static $checkcmd = array('SEL'=>1, 'UPD'=>1, 'INS'=>1, 'REP'=>1, 'DEL'=>1);
+	protected static $checkcmd = array('SEL'=>1, 'UPD'=>1, 'INS'=>1, 'REP'=>1, 'DEL'=>1);       // 查询、更新、插入、替换、删除
 	protected static $config;
 
 	public static function checkquery($sql) {
@@ -366,7 +367,7 @@ class discuz_database_safecheck {
 	}
 
 	private static function _do_query_safe($sql) {
-		$sql = str_replace(array('\\\\', '\\\'', '\\"', '\'\''), '', $sql);
+		$sql = str_replace(array('\\\\', '\\\'', '\\"', '\'\''), '', $sql);     // 替换所有的'
 		$mark = $clean = '';
 		if (strpos($sql, '/') === false && strpos($sql, '#') === false && strpos($sql, '-- ') === false && strpos($sql, '@') === false && strpos($sql, '`') === false) {
 			$clean = preg_replace("/'(.+?)'/s", '', $sql);
